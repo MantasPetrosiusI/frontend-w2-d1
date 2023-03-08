@@ -12,7 +12,7 @@ const Blog = (props) => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const url = process.env.REACT_APP_BE_URL;
+  const url = process.env.REACT_APP_BE_PROD_URL;
 
   const { id } = params;
   const getBlogPosts = async () => {
