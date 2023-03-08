@@ -24,7 +24,6 @@ const BlogList = (props) => {
         );
       }
       if (response.ok) {
-        console.log(response);
         let allPosts = await response.json();
         setPosts(allPosts);
       } else {

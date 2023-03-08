@@ -38,8 +38,6 @@ const NewBlogPost = (props) => {
             author.name.toLowerCase() === authorName.toLowerCase() &&
             author.surname.toLowerCase() === authorSurname.toLowerCase()
         );
-        console.log(author);
-        console.log(author);
         if (author) {
           console.log(author.avatar);
           setAuthorAvatar(author.avatar);
@@ -79,7 +77,7 @@ const NewBlogPost = (props) => {
 
   useEffect(() => {
     if (coverFile) {
-      handleCoverUpload(blogPost._id);
+      handleCoverUpload(blogPost.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blogPost]);

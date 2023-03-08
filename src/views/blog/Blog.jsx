@@ -30,7 +30,7 @@ const Blog = (props) => {
   const handleClose = async (id) => {
     try {
       let response = await fetch(
-        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${blog._id}/comments/${id}`,
+        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${blog.id}/comments/${id}`,
         {
           method: "PUT",
           headers: {
@@ -53,11 +53,12 @@ const Blog = (props) => {
   const handleShow = async (id) => {
     try {
       let response = await fetch(
-        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${blog._id}/comments`
+        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${blog.id}/comments`
       );
       if (response.ok) {
         let comments = await response.json();
-        setCommentToEdit(comments.find((comment) => comment.id === id));
+        let commentsArray = comments.comments;
+        setCommentToEdit(commentsArray.find((comment) => comment._id === id));
       } else {
         console.log("Error");
       }
@@ -72,14 +73,14 @@ const Blog = (props) => {
       const formData = new FormData();
       formData.append("cover", file);
       let response = await fetch(
-        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${id}/uploadCover`,
+        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${id}/uploadCover/single`,
         {
           method: "POST",
           body: formData,
         }
       );
       if (response.ok) {
-        console.log("Yey!");
+        console.log("Uploaded!");
       } else {
         console.log("Try again!");
       }
@@ -111,7 +112,7 @@ const Blog = (props) => {
       );
       if (response.ok) {
         let allComments = await response.json();
-        setComments(allComments);
+        setComments(allComments.comments);
       } else {
         console.log("error");
       }
@@ -130,7 +131,7 @@ const Blog = (props) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            comment: commentToPost,
+            text: commentToPost,
             author: author,
           }),
         }
@@ -148,7 +149,7 @@ const Blog = (props) => {
   const handleDelete = async (postId, commentId) => {
     try {
       await fetch(
-        `${process.env.REACT_APP_BE_PROD_URL}/blopPosts/${postId}/comments/${commentId}`,
+        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${postId}/comments/${commentId}`,
         {
           method: "DELETE",
         }
@@ -200,14 +201,14 @@ const Blog = (props) => {
                   onClick={(e) => {
                     e.preventDefault();
                     if (file) {
-                      handleImageUpload(blog._id);
+                      handleImageUpload(blog.id);
                     }
                   }}
                 >
                   Update
                 </Button>
                 <a
-                  href={`${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${blog._id}/pdf`}
+                  href={`${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${blog.id}/pdf`}
                   className="btn btn-primary"
                   style={{ marginLeft: "5px" }}
                 >
@@ -243,18 +244,16 @@ const Blog = (props) => {
               ></div>
               {comments && (
                 <ListGroup>
-                  {comments.map((comment) => {
+                  {comments.map((c) => {
                     return (
-                      <ListGroup.Item key={comment.id}>
+                      <ListGroup.Item key={c._id}>
                         <div className="d-flex">
                           <div
                             className="d-flex flex-column"
                             style={{ marginRight: "auto" }}
                           >
-                            <div>{comment.comment}</div>
-                            <div style={{ fontSize: "14px" }}>
-                              - {comment.author}
-                            </div>
+                            <div>{c.comment}</div>
+                            <div style={{ fontSize: "14px" }}>- {c.author}</div>
                           </div>
                           <div className="d-flex">
                             <Button
@@ -262,7 +261,7 @@ const Blog = (props) => {
                               style={{ marginRight: "5px" }}
                               variant="outline-primary"
                               onClick={() => {
-                                handleShow(comment.id);
+                                handleShow(c._id);
                               }}
                             >
                               Edit
@@ -272,7 +271,7 @@ const Blog = (props) => {
                               variant="danger"
                               onClick={(e) => {
                                 e.preventDefault();
-                                handleDelete(blog._id, comment.id);
+                                handleDelete(blog.id, c._id);
                               }}
                             >
                               Delete
@@ -304,7 +303,7 @@ const Blog = (props) => {
                   variant="primary"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleSubmit(blog._id);
+                    handleSubmit(blog.id);
                   }}
                 >
                   Submit
