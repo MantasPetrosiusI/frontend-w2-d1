@@ -14,21 +14,93 @@ const NewBlogPost = (props) => {
     let html = convertToHTML(editorState.getCurrentContent());
     setHTML(html);
   }, [editorState]);
+
+  const url = process.env.REACT_APP_URL;
+  const [title, setTitle] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [authorName, setAuthorName] = useState(null);
+
+  const publishNewBlogPost = async () => {
+    try {
+      const newBlogPost = {
+        title: title,
+        category: category,
+        content: html,
+        cover: "",
+        readTime: {
+          value: 3,
+          unit: "minutes",
+        },
+        author: {
+          name: authorName,
+          id: "123456",
+        },
+      };
+
+      const res = await fetch(url + "/blogPosts", {
+        method: "POST",
+        body: JSON.stringify(newBlogPost),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        setHTML("");
+        setTitle("");
+        setCategory("Science");
+      } else {
+        console.log("error!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    publishNewBlogPost();
+  };
+
   return (
     <Container className="new-blog-container">
-      <Form className="mt-5">
-        <Form.Group controlId="blog-form" className="mt-3">
+      <Form className="mt-5" onSubmit={handleSubmit}>
+        <Form.Group
+          controlId="blog-form"
+          className="mt-3"
+          value={authorName}
+          onChange={(e) => {
+            setAuthorName(e.target.value);
+          }}
+        >
+          <Form.Label>Author</Form.Label>
+          <Form.Control size="lg" placeholder="Author" />
+        </Form.Group>
+        <Form.Group
+          controlId="blog-form"
+          className="mt-3"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        >
           <Form.Label>Title</Form.Label>
           <Form.Control size="lg" placeholder="Title" />
         </Form.Group>
-        <Form.Group controlId="blog-category" className="mt-3">
+        <Form.Group
+          controlId="blog-category"
+          className="mt-3"
+          value={category}
+          onChange={(e) => {
+            setCategory(e.target.value);
+          }}
+        >
           <Form.Label>Category</Form.Label>
           <Form.Control size="lg" as="select">
-            <option>Category1</option>
-            <option>Category2</option>
-            <option>Category3</option>
-            <option>Category4</option>
-            <option>Category5</option>
+            <option>Science</option>
+            <option>Technology</option>
+            <option>Health</option>
+            <option>Daily Life</option>
+            <option>Space</option>
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="blog-content" className="mt-3">
@@ -39,6 +111,7 @@ const NewBlogPost = (props) => {
             wrapperClassName="wrapperClassName"
             editorClassName="editorClassName"
             onEditorStateChange={setEditorState}
+            value={html}
           />
         </Form.Group>
         <Form.Group className="d-flex mt-3 justify-content-end">

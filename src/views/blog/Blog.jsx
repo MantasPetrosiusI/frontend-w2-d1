@@ -5,42 +5,46 @@ import BlogAuthor from "../../components/blog/blog-author/BlogAuthor";
 import BlogLike from "../../components/likes/BlogLike";
 import posts from "../../data/posts.json";
 import "./styles.css";
+
 const Blog = (props) => {
-  const [blog, setBlog] = useState({});
+  const [blog, setBlog] = useState([]);
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const navigate = useNavigate();
 
-  const fetchPosts = async () => {
+  const url = process.env.REACT_APP_BE_URL;
+
+  const { id } = params;
+  const getBlogPosts = async () => {
     try {
-      let res = await fetch(
-        `backend-hw-w1-d4-production.up.railway.app/blogPosts/`
-      );
-      let result = await res.json();
+      const res = await fetch(url + "/blogPosts");
+      if (res.ok) {
+        const blogPostsData = await res.json();
+        const blog = blogPostsData?.find((post) => post.id === id);
+        if (blog) {
+          setBlog(blog);
+          setLoading(false);
+        } else {
+          navigate("/404");
+        }
+      } else {
+        console.log("error");
+        navigate("/404");
+      }
     } catch (error) {
-      console.table(error);
+      console.error(error);
     }
   };
 
   useEffect(() => {
-    const { id } = params;
-    const blog = posts.find((post) => post._id.toString() === id);
-
-    if (blog) {
-      setBlog(blog);
-      setLoading(false);
-    } else {
-      navigate("/404");
-    }
+    getBlogPosts();
+    // eslint-disable-next-line
   }, []);
-
   if (loading) {
-    return <div>loading</div>;
-  } else {
     return (
       <div className="blog-details-root">
         <Container>
-          <Image className="blog-details-cover" src={blog.cover} fluid />
+          <Image className="blog-details-cover" src={blog.coverURL} fluid />
           <h1 className="blog-details-title">{blog.title}</h1>
 
           <div className="blog-details-container">
@@ -49,7 +53,7 @@ const Blog = (props) => {
             </div>
             <div className="blog-details-info">
               <div>{blog.createdAt}</div>
-              <div>{`${blog.readTime.value} ${blog.readTime.unit} read`}</div>
+              <div>{`${blog.readTime?.value} ${blog.readTime?.unit} read`}</div>
               <div
                 style={{
                   marginTop: 20,
