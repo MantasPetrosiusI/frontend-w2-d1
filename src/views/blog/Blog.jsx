@@ -10,6 +10,18 @@ const Blog = (props) => {
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const navigate = useNavigate();
+
+  const fetchPosts = async () => {
+    try {
+      let res = await fetch(
+        `backend-hw-w1-d4-production.up.railway.app/blogPosts/`
+      );
+      let result = await res.json();
+    } catch (error) {
+      console.table(error);
+    }
+  };
+
   useEffect(() => {
     const { id } = params;
     const blog = posts.find((post) => post._id.toString() === id);
