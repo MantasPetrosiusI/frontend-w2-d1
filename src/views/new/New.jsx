@@ -39,6 +39,7 @@ const NewBlogPost = (props) => {
             author.surname.toLowerCase() === authorSurname.toLowerCase()
         );
         console.log(author);
+        console.log(author);
         if (author) {
           console.log(author.avatar);
           setAuthorAvatar(author.avatar);
@@ -60,16 +61,16 @@ const NewBlogPost = (props) => {
       const formData = new FormData();
       formData.append("cover", coverFile);
       let response = await fetch(
-        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${id}/uploadCover`,
+        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${id}/uploadCover/single`,
         {
           method: "POST",
           body: formData,
         }
       );
       if (response.ok) {
-        console.log("Yey!");
+        console.log("Uploaded!");
       } else {
-        console.log("Try again!");
+        console.log("Error!");
       }
     } catch (error) {
       console.log(error);
@@ -122,7 +123,7 @@ const NewBlogPost = (props) => {
         setBlogPost(post);
         console.log(authorAvatar);
       } else {
-        console.log("Error!!!");
+        console.log("Error!");
       }
     } catch (error) {
       console.log(error);
