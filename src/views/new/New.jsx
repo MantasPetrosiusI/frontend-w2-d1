@@ -15,7 +15,7 @@ const NewBlogPost = (props) => {
     setHTML(html);
   }, [editorState]);
 
-  const url = process.env.REACT_APP_URL;
+  const url = process.env.REACT_APP_BE_PROD_URL;
   const [title, setTitle] = useState(null);
   const [category, setCategory] = useState(null);
   const [authorName, setAuthorName] = useState(null);
@@ -49,7 +49,7 @@ const NewBlogPost = (props) => {
         setTitle("");
         setCategory("Science");
       } else {
-        console.log("error!");
+        console.log("Error!");
       }
     } catch (error) {
       console.error(error);
