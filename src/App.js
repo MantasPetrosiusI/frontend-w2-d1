@@ -1,4 +1,4 @@
-import "./App.css"
+import "./App.css";
 import React from "react";
 import NavBar from "./components/navbar/BlogNavbar";
 import Footer from "./components/footer/Footer";

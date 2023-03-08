@@ -57,7 +57,7 @@ const Blog = (props) => {
       );
       if (response.ok) {
         let comments = await response.json();
-        setCommentToEdit(comments.find((comment) => comment._id === id));
+        setCommentToEdit(comments.find((comment) => comment.id === id));
       } else {
         console.log("Error");
       }
@@ -148,7 +148,7 @@ const Blog = (props) => {
   const handleDelete = async (postId, commentId) => {
     try {
       await fetch(
-        `${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${postId}/comments/${commentId}`,
+        `${process.env.REACT_APP_BE_PROD_URL}/blopPosts/${postId}/comments/${commentId}`,
         {
           method: "DELETE",
         }
@@ -245,7 +245,7 @@ const Blog = (props) => {
                 <ListGroup>
                   {comments.map((comment) => {
                     return (
-                      <ListGroup.Item key={comment._id}>
+                      <ListGroup.Item key={comment.id}>
                         <div className="d-flex">
                           <div
                             className="d-flex flex-column"
@@ -262,7 +262,7 @@ const Blog = (props) => {
                               style={{ marginRight: "5px" }}
                               variant="outline-primary"
                               onClick={() => {
-                                handleShow(comment._id);
+                                handleShow(comment.id);
                               }}
                             >
                               Edit
@@ -272,7 +272,7 @@ const Blog = (props) => {
                               variant="danger"
                               onClick={(e) => {
                                 e.preventDefault();
-                                handleDelete(blog._id, comment._id);
+                                handleDelete(blog._id, comment.id);
                               }}
                             >
                               Delete
