@@ -208,7 +208,8 @@ const Blog = (props) => {
                   Update
                 </Button>
                 <a
-                  href={`${process.env.REACT_APP_BE_PROD_URL}/blogPosts/${blog.id}/pdf`}
+                  onClick={(e) => e.stopPropagation()}
+                  href={`${process.env.REACT_APP_BE_PROD_URL}/${blog.id}/pdf`}
                   className="btn btn-primary"
                   style={{ marginLeft: "5px" }}
                 >
